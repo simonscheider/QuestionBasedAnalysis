@@ -1,0 +1,28 @@
+PREFIX 	rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX  xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX 	xml: <http://www.w3.org/XML/1998/namespace>
+PREFIX 	wf: <http://geographicknowledge.de/vocab/Workflow.rdf#>
+PREFIX  gis: <http://geographicknowledge.de/vocab/GISConcepts.rdf#>
+PREFIX  ada: <http://geographicknowledge.de/vocab/AnalysisData.rdf#>
+PREFIX  owl: <http://www.w3.org/2002/07/owl#>
+PREFIX 	maup: <http://geographicknowledge.de/vocab/MAUP.rdf#>
+PREFIX : <http://geographicknowledge.de/mauptest/> 
+
+CONSTRUCT { 
+?d maup:estimate _:corr . _:corr a maup:StatIndependent .
+#Generate a property chain (as rdf collection) for each domain of correlation, a list of depth >=1
+#First domain
+_:corr maup:domain _:pc1. 
+_:pc1 rdf:first ada:hasSupport;
+	rdf:rest _:pc2.
+_:pc2 rdf:first gis:hasSize;
+	rdf:rest rdf:nil.
+#Second domain
+_:corr maup:domain _:pc3 . 
+_:pc3 rdf:first ada:hasMeasure;
+	rdf:rest rdf:nil.
+}
+WHERE {
+?d a maup:UniformSSize . 
+}

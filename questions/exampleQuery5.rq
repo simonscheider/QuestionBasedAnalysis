@@ -1,0 +1,8 @@
+PREFIX ex: <http://www.example.de#>
+
+SELECT ?a ?b WHERE{
+?a ex:rel ?b
+FILTER NOT EXISTS { ?a ex:rel ?b.
+FILTER NOT EXISTS {?c ex:rel2 ?b.}
+}
+}

@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<rdf:RDF xmlns="http://geographicknowledge.de/vocab/Workflow.rdf#"
+     xml:base="http://geographicknowledge.de/vocab/Workflow.rdf"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about="http://geographicknowledge.de/vocab/Workflow.rdf">
+        <rdfs:comment xml:lang="en">Basic workflow ontology for modeling derivation graphs and provenance relations in GIS</rdfs:comment>
+        <owl:imports rdf:resource="http://geographicknowledge.de/vocab/AnalysisData.rdf"/>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/Workflow.rdf#belongsTo -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/Workflow.rdf#belongsTo"/>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/Workflow.rdf#edge -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/Workflow.rdf#edge">
+        <rdfs:comment>A property that links to the (reified) statements of a workflow (workflow edges). Use rdf:subject, rdf:predicate and rdf:object to further link the statement with its elements.</rdfs:comment>
+        <rdfs:domain rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Workflow"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/Workflow.rdf#edgeOf -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/Workflow.rdf#edgeOf">
+        <owl:inverseOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#edge"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/Workflow.rdf#input -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/Workflow.rdf#input">
+        <rdfs:domain rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Operation"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/Workflow.rdf#of -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/Workflow.rdf#of">
+        <rdfs:comment xml:lang="en">An overloaded property for linking resources inside a workflow back with provenance resources</rdfs:comment>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/Workflow.rdf#output -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/Workflow.rdf#output">
+        <rdfs:domain rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Operation"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/Workflow.rdf#result -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/Workflow.rdf#result">
+        <rdfs:comment>a property that links to the result of a workflow</rdfs:comment>
+        <rdfs:domain rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Workflow"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/Workflow.rdf#source -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/Workflow.rdf#source">
+        <rdfs:comment>A property that links to the sources (inputs) of a workflow</rdfs:comment>
+        <rdfs:domain rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Workflow"/>
+        <rdfs:subPropertyOf rdf:resource="&owl;topObjectProperty"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/Workflow.rdf#Operation -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/Workflow.rdf#Operation">
+        <rdfs:comment xml:lang="en">The event of applying some tool to inputs generating outputs inside a workflow</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/Workflow.rdf#Resource -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/Workflow.rdf#Resource">
+        <rdfs:comment>Any resource used in a workflow. May be a function or a dataset or data or a reference</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/Workflow.rdf#Workflow -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/Workflow.rdf#Workflow">
+        <rdfs:comment xml:lang="en">A class for instances that denote workflows. Workflow instances should be connected to triples of the workflow, using RDF reification.</rdfs:comment>
+    </owl:Class>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+

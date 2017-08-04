@@ -1,0 +1,1300 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY AnalysisData "http://geographicknowledge.de/vocab/AnalysisData.rdf#" >
+]>
+
+
+<rdf:RDF xmlns="http://geographicknowledge.de/vocab/GISConcepts.rdf#"
+     xml:base="http://geographicknowledge.de/vocab/GISConcepts.rdf"
+     xmlns:AnalysisData="http://geographicknowledge.de/vocab/AnalysisData.rdf#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf">
+        <rdfs:comment xml:lang="en">This is an ontology of GIS concepts, including datatypes, referents and operations (functions) inside a workflow. It can be used to express GIS layers and Geoprocesssing workflows together with their types</rdfs:comment>
+        <owl:imports rdf:resource="http://geographicknowledge.de/vocab/AnalysisData.rdf"/>
+        <owl:imports rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf"/>
+        <owl:imports rdf:resource="http://www.opengis.net/ont/geosparql"/>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/AnalysisData.rdf#hasElement -->
+
+    <owl:ObjectProperty rdf:about="&AnalysisData;hasElement">
+        <rdfs:range rdf:resource="&AnalysisData;Data"/>
+        <rdfs:domain rdf:resource="&AnalysisData;DataSet"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/AnalysisData.rdf#hasMeasure -->
+
+    <owl:ObjectProperty rdf:about="&AnalysisData;hasMeasure">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#hasAttribute"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/AnalysisData.rdf#hasSupport -->
+
+    <owl:ObjectProperty rdf:about="&AnalysisData;hasSupport">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#hasAttribute"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#costsurface -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#costsurface">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#inputdata"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#erasefeature -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#erasefeature">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#inputdata"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#hasAttribute -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#hasAttribute">
+        <rdfs:domain rdf:resource="&AnalysisData;Data"/>
+        <rdfs:range rdf:resource="&AnalysisData;Reference"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#hasEnd -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#hasEnd">
+        <rdfs:range rdf:resource="&AnalysisData;DataSet"/>
+        <rdfs:domain rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Path"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#hasStart -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#hasStart">
+        <rdfs:range rdf:resource="&AnalysisData;DataSet"/>
+        <rdfs:domain rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Path"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#in -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#in">
+        <rdfs:comment>input of a function</rdfs:comment>
+        <rdfs:domain rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Fun"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#inputdata -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#inputdata">
+        <rdfs:comment>Whenever the input is data, and not a single value or a function</rdfs:comment>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#input"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#inputraster -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#inputraster">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#inputdata"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#isAggrOf -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#isAggrOf">
+        <rdfs:comment>Says that a value list of a dataset (in ada) was aggregated from another dataset. Used for spatial aggregations</rdfs:comment>
+        <rdfs:range rdf:resource="&AnalysisData;DataSet"/>
+        <rdfs:domain rdf:resource="&AnalysisData;ValueList"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#of"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#linkraster -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#linkraster">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#inputdata"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#mergedRegionOf -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#mergedRegionOf">
+        <rdfs:comment xml:lang="en">A property linking a merged region to the layer of which it was generated</rdfs:comment>
+        <rdfs:range rdf:resource="&AnalysisData;DataSet"/>
+        <rdfs:domain rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Region"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#of"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#ofprop -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#ofprop">
+        <rdfs:comment>A property for propagating types in a workflow</rdfs:comment>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#of"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#out -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#out">
+        <rdfs:domain rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Fun"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#param -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#param">
+        <rdfs:comment>input parameter</rdfs:comment>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#input"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#rastermask -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#rastermask">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#inputdata"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#sink -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#sink">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#inputdata"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#size -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#size">
+        <rdfs:domain rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Region"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#source -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#source">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#inputdata"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation">
+        <rdfs:comment>a superproperty for binary spatial relations</rdfs:comment>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#zones -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#zones">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#inputdata"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.opengis.net/ont/geosparql#ehContains -->
+
+    <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#ehContains">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://www.opengis.net/ont/geosparql#ehCoveredBy -->
+
+    <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#ehCoveredBy">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://www.opengis.net/ont/geosparql#ehCovers -->
+
+    <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#ehCovers">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://www.opengis.net/ont/geosparql#ehDisjoint -->
+
+    <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#ehDisjoint">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://www.opengis.net/ont/geosparql#ehEquals -->
+
+    <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#ehEquals">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://www.opengis.net/ont/geosparql#ehInside -->
+
+    <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#ehInside">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://www.opengis.net/ont/geosparql#ehMeet -->
+
+    <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#ehMeet">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://www.opengis.net/ont/geosparql#ehOverlap -->
+
+    <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#ehOverlap">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://www.opengis.net/ont/geosparql#rcc8dc -->
+
+    <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#rcc8dc">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://www.opengis.net/ont/geosparql#rcc8ec -->
+
+    <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#rcc8ec">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://www.opengis.net/ont/geosparql#rcc8eq -->
+
+    <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#rcc8eq">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://www.opengis.net/ont/geosparql#rcc8ntpp -->
+
+    <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#rcc8ntpp">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://www.opengis.net/ont/geosparql#rcc8ntppi -->
+
+    <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#rcc8ntppi">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://www.opengis.net/ont/geosparql#rcc8po -->
+
+    <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#rcc8po">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://www.opengis.net/ont/geosparql#rcc8tpp -->
+
+    <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#rcc8tpp">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://www.opengis.net/ont/geosparql#rcc8tppi -->
+
+    <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#rcc8tppi">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://www.opengis.net/ont/geosparql#sfContains -->
+
+    <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#sfContains">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://www.opengis.net/ont/geosparql#sfCrosses -->
+
+    <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#sfCrosses">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://www.opengis.net/ont/geosparql#sfDisjoint -->
+
+    <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#sfDisjoint">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://www.opengis.net/ont/geosparql#sfEquals -->
+
+    <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#sfEquals">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://www.opengis.net/ont/geosparql#sfIntersects -->
+
+    <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#sfIntersects">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://www.opengis.net/ont/geosparql#sfOverlaps -->
+
+    <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#sfOverlaps">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://www.opengis.net/ont/geosparql#sfTouches -->
+
+    <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#sfTouches">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+    </rdf:Description>
+    
+
+
+    <!-- http://www.opengis.net/ont/geosparql#sfWithin -->
+
+    <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#sfWithin">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+    </rdf:Description>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/AnalysisData.rdf#Data -->
+
+    <owl:Class rdf:about="&AnalysisData;Data">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Resource"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/AnalysisData.rdf#DataSet -->
+
+    <owl:Class rdf:about="&AnalysisData;DataSet">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Resource"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/AnalysisData.rdf#Object -->
+
+    <owl:Class rdf:about="&AnalysisData;Object">
+        <rdfs:subClassOf rdf:resource="&AnalysisData;Reference"/>
+        <rdfs:comment xml:lang="en">The class of discrete entities (includes objects (endurants) as well as events (occurrents))</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/AnalysisData.rdf#ObjectData -->
+
+    <owl:Class rdf:about="&AnalysisData;ObjectData">
+        <rdfs:subClassOf rdf:resource="&AnalysisData;Data"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/AnalysisData.rdf#Quality -->
+
+    <owl:Class rdf:about="&AnalysisData;Quality">
+        <rdfs:subClassOf rdf:resource="&AnalysisData;Reference"/>
+        <rdfs:comment xml:lang="en">The class of values of some quality</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/AnalysisData.rdf#QualityData -->
+
+    <owl:Class rdf:about="&AnalysisData;QualityData">
+        <rdfs:subClassOf rdf:resource="&AnalysisData;Data"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/AnalysisData.rdf#Reference -->
+
+    <owl:Class rdf:about="&AnalysisData;Reference">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Resource"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/AnalysisData.rdf#Spatial -->
+
+    <owl:Class rdf:about="&AnalysisData;Spatial">
+        <rdfs:subClassOf rdf:resource="&AnalysisData;Reference"/>
+        <rdfs:comment xml:lang="en">The class of spatial referents defined in some spatial reference system</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/AnalysisData.rdf#SpatialData -->
+
+    <owl:Class rdf:about="&AnalysisData;SpatialData">
+        <rdfs:subClassOf rdf:resource="&AnalysisData;Data"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/AnalysisData.rdf#SpatialDataSet -->
+
+    <owl:Class rdf:about="&AnalysisData;SpatialDataSet">
+        <rdfs:subClassOf rdf:resource="&AnalysisData;DataSet"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/AnalysisData.rdf#Temporal -->
+
+    <owl:Class rdf:about="&AnalysisData;Temporal">
+        <rdfs:subClassOf rdf:resource="&AnalysisData;Reference"/>
+        <rdfs:comment xml:lang="en">The class of temporal referents defined in some temporal reference system</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/AnalysisData.rdf#TemporalData -->
+
+    <owl:Class rdf:about="&AnalysisData;TemporalData">
+        <rdfs:subClassOf rdf:resource="&AnalysisData;Data"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/AnalysisData.rdf#TemporalDataSet -->
+
+    <owl:Class rdf:about="&AnalysisData;TemporalDataSet">
+        <rdfs:subClassOf rdf:resource="&AnalysisData;DataSet"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Buffer -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Buffer">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#VectorTopology"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#CalculateField -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#CalculateField">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Table"/>
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Operation"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#CellStatistics -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#CellStatistics">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#LocalMapAlgebra"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Clip -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Clip">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#VectorTopology"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Conversion -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Conversion">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Operation"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Cost -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Cost">
+        <rdfs:subClassOf rdf:resource="&AnalysisData;Quality"/>
+        <rdfs:comment>A quality that expresses some cost , e.g. in a cost surface</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#CostDistance -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#CostDistance">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Distance"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#of"/>
+                <owl:someValuesFrom rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Raster"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:comment xml:lang="en">a quality that denotes a cost distance to a set of objects defined over a cost surface</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#CostDistanceTool -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#CostDistanceTool">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#RasterOp"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#CostPath -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#CostPath">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#RasterOp"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Density -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Density">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#RelQ"/>
+        <rdfs:comment xml:lang="en">A quality that denotes the spatial density of a set of objects</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Distance -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Distance">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#RelQ"/>
+        <rdfs:comment xml:lang="en">a quality that denotes the spatial distance to a set of objects</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Erase -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Erase">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#VectorTopology"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#EuclDistance -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#EuclDistance">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Distance"/>
+        <rdfs:comment xml:lang="en">a quality that denotes Euclidean distance to a set of objects</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#EuclideanDistanceTool -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#EuclideanDistanceTool">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Operation"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Event -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Event">
+        <rdfs:subClassOf rdf:resource="&AnalysisData;Object"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Existence -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Existence">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#RelQ"/>
+        <rdfs:comment xml:lang="en">A quality that denotes the existence of a set of objects in space</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#ExtractByMask -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#ExtractByMask">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#RasterOp"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#FeatureToRaster -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#FeatureToRaster">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#toRaster"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#FieldData -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#FieldData">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&AnalysisData;hasMeasure"/>
+                <owl:someValuesFrom rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#FieldQuality"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&AnalysisData;Data"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#FieldDataSet -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#FieldDataSet">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&AnalysisData;hasElement"/>
+                <owl:someValuesFrom rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#FieldData"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&AnalysisData;DataSet"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#FieldQuality -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#FieldQuality">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#of"/>
+                <owl:someValuesFrom rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#SField"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&AnalysisData;Reference"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#FocalMapAlgebra -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#FocalMapAlgebra">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#RasterOp"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Fun -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Fun">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Resource"/>
+        <rdfs:comment xml:lang="en">The class of functions. This is a general notion for any operation in and outside a database. Has input and output.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Intersect -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Intersect">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#VectorTopology"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#JoinField -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#JoinField">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Operation"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Layer -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Layer">
+        <rdfs:subClassOf rdf:resource="&AnalysisData;DataSet"/>
+        <rdfs:comment>a GIS layer</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Line -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Line">
+        <rdfs:subClassOf rdf:resource="&AnalysisData;Spatial"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#LineData -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#LineData">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#hasAttribute"/>
+                <owl:someValuesFrom rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Line"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&AnalysisData;SpatialData"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#LineDataSet -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#LineDataSet">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&AnalysisData;hasElement"/>
+                <owl:someValuesFrom rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#LineData"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&AnalysisData;SpatialDataSet"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#LinetoRaster -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#LinetoRaster">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#toRaster"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Link -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Link">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#RelQ"/>
+        <rdfs:comment xml:lang="en">A quality that denotes a link to a neighboring region </rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#LocalMapAlgebra -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#LocalMapAlgebra">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#RasterOp"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Mask -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Mask">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#RasterOp"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Neighborhood -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Neighborhood">
+        <rdfs:subClassOf rdf:resource="&AnalysisData;Object"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#of"/>
+                <owl:someValuesFrom rdf:resource="&AnalysisData;Object"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:comment xml:lang="en">Neighborhood of some spatial object</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Network -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Network">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&AnalysisData;hasElement"/>
+                <owl:someValuesFrom rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#NetworkData"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&AnalysisData;DataSet"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#NetworkData -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#NetworkData">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&AnalysisData;hasSupport"/>
+                <owl:someValuesFrom rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Path"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&AnalysisData;Data"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#ObjectDataSet -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#ObjectDataSet">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&AnalysisData;hasElement"/>
+                <owl:someValuesFrom rdf:resource="&AnalysisData;ObjectData"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&AnalysisData;DataSet"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Path -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Path">
+        <rdfs:subClassOf rdf:resource="&AnalysisData;Object"/>
+        <rdfs:comment xml:lang="en">A single element of a spatial network denoting a spatial path from start object to end object</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Point -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Point">
+        <rdfs:subClassOf rdf:resource="&AnalysisData;Spatial"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#PointData -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#PointData">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#hasAttribute"/>
+                <owl:someValuesFrom rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Point"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&AnalysisData;SpatialData"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#PointDataSet -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#PointDataSet">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&AnalysisData;hasElement"/>
+                <owl:someValuesFrom rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#PointData"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&AnalysisData;SpatialDataSet"/>
+        <rdfs:comment>This is a point sample of a spatial field</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#PointtoRaster -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#PointtoRaster">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#toRaster"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#PolygontoRaster -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#PolygontoRaster">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#toRaster"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#QQuality -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#QQuality">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#RelQ"/>
+        <rdfs:comment xml:lang="en">A quality derived from another quality (e.g. by copying it)</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Raster -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Raster">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#RegionDataSet"/>
+        <rdfs:comment>The raster data type in GIS</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#RasterCalculator -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#RasterCalculator">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#LocalMapAlgebra"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#RasterOp -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#RasterOp">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Operation"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Reclassify -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Reclassify">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#LocalMapAlgebra"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Region -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Region">
+        <rdfs:subClassOf rdf:resource="&AnalysisData;Spatial"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#RegionData -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#RegionData">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#hasAttribute"/>
+                <owl:someValuesFrom rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Region"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&AnalysisData;SpatialData"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#RegionDataSet -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#RegionDataSet">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&AnalysisData;hasElement"/>
+                <owl:someValuesFrom rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#RegionData"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&AnalysisData;SpatialDataSet"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#RelQ -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#RelQ">
+        <rdfs:subClassOf rdf:resource="&AnalysisData;Quality"/>
+        <rdfs:comment xml:lang="en">A relational quality</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#SField -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#SField">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#in"/>
+                        <owl:someValuesFrom rdf:resource="&AnalysisData;Spatial"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#out"/>
+                        <owl:someValuesFrom rdf:resource="&AnalysisData;Quality"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Fun"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#of"/>
+                <owl:someValuesFrom rdf:resource="&AnalysisData;Temporal"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:comment>A spatial field (a continuous function defined on space ranging over quality values)</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#TSeries -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#TSeries">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#in"/>
+                        <owl:someValuesFrom rdf:resource="&AnalysisData;Temporal"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#out"/>
+                        <owl:someValuesFrom rdf:resource="&AnalysisData;Quality"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Fun"/>
+        <rdfs:comment>A time series is a continuous function defined over time and ranging over quality values</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Table -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Table">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Operation"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#TableJoin -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#TableJoin">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Table"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#TrackData -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#TrackData">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&AnalysisData;hasMeasure"/>
+                        <owl:someValuesFrom rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Point"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&AnalysisData;hasSupport"/>
+                        <owl:someValuesFrom rdf:resource="&AnalysisData;Temporal"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&AnalysisData;Data"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#of"/>
+                <owl:someValuesFrom rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Trajectory"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Trajectory -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Trajectory">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#in"/>
+                        <owl:someValuesFrom rdf:resource="&AnalysisData;Temporal"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#out"/>
+                        <owl:someValuesFrom rdf:resource="&AnalysisData;Spatial"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Fun"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#of"/>
+                <owl:someValuesFrom rdf:resource="&AnalysisData;Object"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:comment>A trajectory is a continuous function defined over time and ranging over space</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#VectorTopology -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#VectorTopology">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Operation"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#ZonalMapAlgebra -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#ZonalMapAlgebra">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Operation"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#ZonalStatisticsAsTable -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#ZonalStatisticsAsTable">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#ZonalMapAlgebra"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#toLine -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#toLine">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#toVector"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#toPoint -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#toPoint">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#toVector"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#toPolygon -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#toPolygon">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#toVector"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#toRaster -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#toRaster">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Conversion"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#toVector -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#toVector">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Conversion"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/Workflow.rdf#Operation -->
+
+    <rdf:Description rdf:about="http://geographicknowledge.de/vocab/Workflow.rdf#Operation">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Fun"/>
+        <rdfs:comment xml:lang="en">GIS Operations </rdfs:comment>
+    </rdf:Description>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#de -->
+
+    <owl:NamedIndividual rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#de">
+        <AnalysisData:hasMeasure rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#line"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#ds -->
+
+    <owl:NamedIndividual rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#ds">
+        <AnalysisData:hasElement rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#de"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#line -->
+
+    <owl:NamedIndividual rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#line">
+        <rdf:type rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Line"/>
+    </owl:NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+
