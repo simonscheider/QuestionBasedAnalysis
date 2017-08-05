@@ -6,7 +6,7 @@
 #               that can be nested (one level). The purpose is desrcibing GIS tools
 #               and querying for them based on the question they answer.
 #
-# Author:      Simon Scheider
+# Author:
 #
 # Created:     04/08/2017
 # Copyright:   (c) simon 2017
@@ -41,8 +41,8 @@ def loadQueries(filepattern):
     querystr = glob.glob(filepattern)
     #file = 'questions/maupquery.rq'
     for qi in querystr:
-        print file_to_str(qi)
-        q = sparql.prepareQuery(file_to_str('rdf_prefixes.txt') +'\n'+ file_to_str(qi))
+        #print file_to_str(qi)
+        q = file_to_str(qi)#file_to_str('rdf_prefixes.txt') +'\n'+
         queries.append(q)
     return queries
 
@@ -65,36 +65,39 @@ class Stack:
      def size(self):
          return len(self.items)
 
-class Outpattern():
-    goals = []
-    triples=[]
-    rules = Stack()
-    minus=[]
-    completion=[]
+"""This class represents query patterns in a recursive way. That is, subpatterns are stored inside outer patterns.
+The method constraintsPatterns() needs to be called after adding all subpatterns and turns the pattern into an explicit SPARQL constraint representation with BGP, NGP and RP."""
 
-    def __init__(self, goals=[], triples=[], rules=Stack()):
-        #{"minus"=[], "completion"=[]}
+class Outpattern():
+##    goals = []
+##    triples=[]
+##    rules = Stack()
+##    minus=[]
+##    completion=[]
+
+    def __init__(self, goals=[], triples=[], rules=Stack(), minus = [], completion = []):
         self.goals=goals
         self.triples=triples
         self.rules=rules
+        self.minus = minus
+        self.completion = completion
+
 
     def add(self, state, array=[]):
         if state == 'triples':
             self.triples.extend(array)
         elif state == 'minus':
-            o = Outpattern(triples=array, rules=Stack())
+            o = Outpattern(triples=array)
             self.rules.push(o)
-            print "write rule body: "+ str(array)
-            #self.minus.append(array)
+            #print "write rule body: "+ str(array)
         elif state == 'completion':
             r = Outpattern(triples=array)
             o = self.rules.pop()
             o.rules.push(r)
             self.rules.push(o)
-            print "write rule head: "+ str(array)
-            #print "rule: "+ str(o.triples) + '->'+ str(r.triples)
-            print "rule: "+ str(o.triples) + '->'+ str(o.rules.items[0].triples)
-            #state = 'triples'
+            #print "write rule head: "+ str(array)
+            #print "rule: "+ str(o.triples) + '->'+ str(o.rules.items[0].triples)
+
 
     #This generates the constaint patterns (arrays of negations (=minus) and rules (=completion) from the nested graph patterns
     def constraintPatterns(self):
@@ -107,50 +110,35 @@ class Outpattern():
 
     def __str__(self):
          #print out
-         prtt = ('Constraint Graph pattern: \n'+
-         'BGP: \n'+ str(self.triples) +' \n'+
-         'NGPs: ')
+         prtt = (
+         '\n SPARQL Constraint Graph Pattern: \n'+
+         ' Goals: '+str(self.goals)+'\n'+
+         ' BGP: \n'+ str(self.triples) +' \n'+
+         ' NGPs: ')
          for i,m in enumerate(self.minus):
-                prtt += "\n NGP "+ str(i) +': ' +str(m)
+                prtt += "\n  NGP "+ str(i+1) +': ' +str(m)
          prtt +="\n"+"RPs: "
          for i,m in enumerate(self.completion):
-                prtt += "\n RP "+ str(i) +': ' +str(m[0]) +' -> '+str(m[1])
+                prtt += "\n  RP "+ str(i+1) +': ' +str(m[0]) +' -> '+str(m[1])
          return prtt
-##        rule = ''
-##        negation=''
-##        negindex = 0
-##        ruleindex = 0
-##        for index, p in enumerate(self.rules.items):
-##            if p.rules.isEmpty():
-##                negindex += 1
-##                negation += ' \n negation '+str(negindex) +': '
-##                negation += str(p.triples)
-##            else:
-##                ruleindex +=1
-##                rule += '\n rule '+str(ruleindex) +': '
-##                rule += str(p.triples)
-##                comp = p.rules.items[0].triples
-##                rule += ' -> ' + str(comp)
-##        return ('Output patterns: \n'+
-##        'goals: '+str(self.goals)+'\n'+
-##        'triples: '+str(self.triples)+'\n'+
-##        'negations:'+ negation+'\n'+
-##        'rules: '+rule)
 
 
 
-#Method to parse SPARQL queries into constraint patterns
+"""Methods to parse a SPARQL query into SPARQL constraint patterns"""
+
 def parseQuery(query):
     #get the SPARQL algebra
-    a = query.algebra
+    qu=sparql.prepareQuery(query)
+    a = qu.algebra
     #print a
     goals=[]
     if 'PV' in a.keys():
         goals = a['PV']
-        print "goals: " +str(goals)
+        #print "goals: " +str(goals)
     #initialize output object
     output = Outpattern(goals=goals)
     transformP(a.name, a, output, 'triples')
+    output.constraintPatterns()
     return output
 
 def transformP(pname, p, output, state):
@@ -179,20 +167,20 @@ def transformTriplesBlock(pattern,output,state):
     for i in pattern.triples:
         tuple = (i[0],i[1],i[2])
         triplesnew.append(tuple)
-    print 'push basic pattern '+pattern.name+': '+str(triplesnew) +' state:'+state
+    #print 'push basic pattern '+pattern.name+': '+str(triplesnew) +' state:'+state
     output.add(state,triplesnew)
 
 def transformBGP(pattern, output, state):
-    print 'push basic pattern '+pattern.name+': '+str(pattern.triples)+' state:'+state
+    #print 'push basic pattern '+pattern.name+': '+str(pattern.triples)+' state:'+state
     output.add(state,pattern.triples)
 
 def transformJoin(pattern, output, state):
-    print 'transform a joined pattern'
+    #print 'transform a joined pattern'
     transformP(pattern.p1.name,pattern.p1,output, state)
     transformP(pattern.p2.name,pattern.p2,output, state)
 
 def transformPart(parts, output, state):
-    print "transform parts "#+str(parts)
+    #print "transform parts "#+str(parts)
     for partt in parts['part']:
         transformP(partt.name,partt,output, state)
 
@@ -201,73 +189,155 @@ def transformFilter(pattern, output, state):
         transformP(pattern.p.name, pattern.p,output, state)
     filterexp = pattern.expr
     exname = filterexp.name
-    print 'parse expression: '+exname
+    #print 'parse expression: '+exname
     transformExp(exname, filterexp,output, state)
 
 def transformExp(exname,ex, output, state):
     if exname=='Builtin_NOTEXISTS':
-        #print ex.keys()
-       # print 'transform graph parts :'+str(ex.graph.part)
-        print "graph: "+ex['graph'].name
-        print "graph alt: "+ex.graph.name
-        #print "graph content: "+str(ex['graph'])
-        #print "graph2 content: "+str(ex.graph)
-        #print "part :"+ex.graph.part.name
+        #print "graph: "+ex['graph'].name
+        #print "graph alt: "+ex.graph.name
         if state == 'triples':
             state = 'minus'
         elif state =='minus':
             state = 'completion'
         transformP(ex['graph'].name,ex['graph'],output,state)
-            #print part.triples
         if ex.graph.expr:
-            print 'parse expression: '+ex.graph.expr.name
+            #print 'parse expression: '+ex.graph.expr.name
             transformExp(ex.graph.expr.name, ex.graph.expr,output, state)
     elif exname=='Builtin_EXISTS':
-        print "graph: "+ex['graph'].name
-        print "graph alt: "+ex.graph.name
+        #print "graph: "+ex['graph'].name
+        #print "graph alt: "+ex.graph.name
         transformP(ex['graph'].name,ex['graph'],output,state)
-            #print part.triples
         if ex.graph.expr:
-            print 'parse expression: '+ex.graph.expr.name
+            #print 'parse expression: '+ex.graph.expr.name
             transformExp(ex.graph.expr.name, ex.graph.expr,output, state)
     elif exname=='RelationalExpression':
         if ('!' in ex.op or 'not' in ex.expr):
             #ex.op[]
-            print "push relational pattern: " +str((ex.expr, ex.op, ex.other)) + 'state: ' +state
+            #print "push relational pattern: " +str((ex.expr, ex.op, ex.other)) + 'state: ' +state
             output.add('minus',[(ex.expr, ex.op, ex.other)])
 
         print(str(ex.expr)+str(ex.op)+str(ex.other))
     elif exname == 'ConditionalAndExpression':
-        print 'parse expression: '+ex['expr'].name
+        #print 'parse expression: '+ex['expr'].name
         transformExp(ex['expr'].name, ex['expr'],output, state)
         for o in ex['other']:
-            print 'parse expression: '+o.name
+            #print 'parse expression: '+o.name
             transformExp(o.name, o, output, state)
     else:
          print "This query contains expression "+exname+" which cannot be transformed!"
 
 
 
+"""Methods for query containment matching"""
+
+'''This method turns a basic graph pattern into an ask query string that can be fired against RDF'''
+def BGP2ASK(bgp):
+    triples = ''
+    for t in bgp:
+        triples += t[0].n3()+' '+t[1].n3()+' '+t[2].n3()+' . \n'
+    q = """\n ASK { \n""" +triples+  """ }"""
+    return q
+    #bool(results)
+
+'''This method turns a basic graph pattern into RDF. Variables are turned into blank nodes.'''
+def BGP2RDF(bgp):
+    output = rdflib.Graph()
+    for t in bgp:
+        output.add((variable2term(t[0]), variable2term(t[1]),variable2term(t[2])))
+    return output
+
+'''This turns variables into blank nodes'''
+def variable2term(term):
+    if type(term) is rdflib.term.Variable:
+        return rdflib.term.BNode(term)
+    else:
+        return term
+
+def n_triples( g, n=None ):
+    """ Prints the number of triples in graph g """
+    if n is None:
+        print( '  Triples: '+str(len(g)) )
+    else:
+        print( '  Triples: +'+str(len(g)-n) )
+    return len(g)
+
+def printGraph(graph):
+    for s, p, o in graph:
+        print s, p,  o
+
+def subBGP(bgp, bgpagainst):
+    rdf = BGP2RDF(bgpagainst)
+    ask = BGP2ASK(bgp)
+    result = rdf.query(ask)
+    return bool(result)
+
+def subNGP(ngp, ngpagainst):
+    return subBGP(ngpagainst,ngp)
+
+def subNGPs(ngps, ngpsagainst):
+    for pa in ngpsagainst:
+        res = False
+        for p in ngps:
+            if subNGP(p, pa):
+                res = True
+                break
+        if res == False:
+            return False
+    return True
+
+def subRP(rp, rpagainst):
+    body2 = rpagainst[0]
+    head2 = rpagainst[1]
+    body1 = rp[0]
+    head1 = rp[1]
+    return subBGP(body2, body1) and subBGP(head1, head2)
+
+def subRPs(rps, rpsagainst):
+    for pa in rpsagainst:
+        res = False
+        for p in rps:
+            if subRP(p, pa):
+                res = True
+                break
+        if res == False:
+            return False
+    return True
 
 
+def subCGP(cgp, cgpagainst):
+    return subBGP(cgp.triples,cgpagainst.triples) and subNGPs(cgp.minus,cgpagainst.minus) and subRPs(cgp.completion,cgpagainst.completion)
 
 
+def matchRequest2tool(requestpt, toolpt):
+    return subCGP(toolpt,requestpt)
 
 
-
-
-
+def searchForTool(request):
+    tq = loadQueries('tools/tool*.rq')
+    print '\n Search for corresponding tools \n'
+    for i,tqs in enumerate(tq):
+        print 'Tool '+str(i+1)+':'
+        #sparql.algebra.pprintAlgebra(q)
+        tool = parseQuery(tqs)
+        if matchRequest2tool(request, tool):
+            print ''
+            print 'Request matches to'
+            print tool
+            print tqs
+            #print tool.query
 
 
 
 def main():
     #g = rdflib.ConjunctiveGraph()
-    qs = loadQueries('questions/exampleQuery4.rq')
-    for q in qs:
-          #sparql.algebra.pprintAlgebra(q)
-          out = parseQuery(q)
-          out.constraintPatterns()
-          print out
+    rq = loadQueries('requests/request*.rq')
+    for rqs in rq:
+        print 'Request: '
+        print rqs
+        request = parseQuery(rqs)
+        searchForTool(request)
+
 
 
 
