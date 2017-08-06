@@ -69,29 +69,31 @@ class Stack:
 The method constraintsPatterns() needs to be called after adding all subpatterns and turns the pattern into an explicit SPARQL constraint representation with BGP, NGP and RP."""
 
 class Outpattern():
-##    goals = []
-##    triples=[]
-##    rules = Stack()
-##    minus=[]
-##    completion=[]
+    goals = []
+    variables = set()
+    triples=[]
+    rules = Stack()
+    minus=[]
+    completion=[]
 
-    def __init__(self, goals=[], triples=[], rules=Stack(), minus = [], completion = []):
+    def __init__(self, goals=[], triples=[], rules=Stack(), minus = [], completion = [], variables = []):
         self.goals=goals
         self.triples=triples
         self.rules=rules
         self.minus = minus
         self.completion = completion
+        self.variables = variables
 
 
     def add(self, state, array=[]):
         if state == 'triples':
             self.triples.extend(array)
         elif state == 'minus':
-            o = Outpattern(triples=array)
+            o = Outpattern(triples=array, goals=[], rules=Stack(), minus = [], completion = [], variables = set())
             self.rules.push(o)
             #print "write rule body: "+ str(array)
         elif state == 'completion':
-            r = Outpattern(triples=array)
+            r = Outpattern(triples=array, goals=[], rules=Stack(), minus = [], completion = [], variables = set())
             o = self.rules.pop()
             o.rules.push(r)
             self.rules.push(o)
@@ -99,20 +101,36 @@ class Outpattern():
             #print "rule: "+ str(o.triples) + '->'+ str(o.rules.items[0].triples)
 
 
-    #This generates the constaint patterns (arrays of negations (=minus) and rules (=completion) from the nested graph patterns
+    #This generates the constaint patterns (arrays of negations (=minus) and rules (=completion) from the nested graph patterns and fishes out variables of the entire pattern
     def constraintPatterns(self):
+        self.minus = []
+        self.completion = []
+        self.variables = set()
+
+        self.setVariables(self.triples)
         for p in self.rules.items:
             if p.rules.isEmpty():
                 self.minus.append(p.triples)
+                self.setVariables(p.triples)
             else:
                 rule = [p.triples,p.rules.items[0].triples]
+                self.setVariables(p.triples)
+                self.setVariables(p.rules.items[0].triples)
                 self.completion.append(rule)
+
+    def setVariables(self,triples):
+        for triple in triples:
+            for j in (0,1,2):
+                if type(triple[j]) is rdflib.term.Variable:
+                    self.variables.add(triple[j])
+
 
     def __str__(self):
          #print out
          prtt = (
          '\n SPARQL Constraint Graph Pattern: \n'+
          ' Goals: '+str(self.goals)+'\n'+
+         ' Variables: '+str(self.variables)+'\n'+
          ' BGP: \n'+ str(self.triples) +' \n'+
          ' NGPs: ')
          for i,m in enumerate(self.minus):
@@ -136,7 +154,7 @@ def parseQuery(query):
         goals = a['PV']
         #print "goals: " +str(goals)
     #initialize output object
-    output = Outpattern(goals=goals)
+    output = Outpattern(goals=goals,  triples=[], rules=Stack(), minus = [], completion = [], variables = set())
     transformP(a.name, a, output, 'triples')
     output.constraintPatterns()
     return output
@@ -164,6 +182,7 @@ def transformP(pname, p, output, state):
 
 def transformTriplesBlock(pattern,output,state):
     triplesnew =[]
+    variables = []
     for i in pattern.triples:
         tuple = (i[0],i[1],i[2])
         triplesnew.append(tuple)
@@ -231,16 +250,16 @@ def transformExp(exname,ex, output, state):
 
 """Methods for query containment matching"""
 
-'''This method turns a basic graph pattern into an ask query string that can be fired against RDF'''
+'''This method turns a basic graph pattern into a select query string that can be fired against RDF'''
 def BGP2ASK(bgp):
     triples = ''
     for t in bgp:
         triples += t[0].n3()+' '+t[1].n3()+' '+t[2].n3()+' . \n'
-    q = """\n ASK { \n""" +triples+  """ }"""
+    q = """\n SELECT * WHERE { \n""" +triples+  """ }"""
     return q
     #bool(results)
 
-'''This method turns a basic graph pattern into RDF. Variables are turned into blank nodes.'''
+'''This method turns a basic graph pattern into RDF. Variables are turned into URIs.'''
 def BGP2RDF(bgp):
     output = rdflib.Graph()
     for t in bgp:
@@ -250,7 +269,7 @@ def BGP2RDF(bgp):
 '''This turns variables into blank nodes'''
 def variable2term(term):
     if type(term) is rdflib.term.Variable:
-        return rdflib.term.BNode(term)
+        return rdflib.term.URIRef(term)
     else:
         return term
 
@@ -267,10 +286,11 @@ def printGraph(graph):
         print s, p,  o
 
 def subBGP(bgp, bgpagainst):
-    rdf = BGP2RDF(bgpagainst)
-    ask = BGP2ASK(bgp)
+    #mapping from bgpagainst into bgp
+    rdf = BGP2RDF(bgp)
+    ask = BGP2ASK(bgpagainst)
     result = rdf.query(ask)
-    return bool(result)
+    return result
 
 def subNGP(ngp, ngpagainst):
     return subBGP(ngpagainst,ngp)
@@ -304,9 +324,48 @@ def subRPs(rps, rpsagainst):
             return False
     return True
 
+#This method generates a mapping from variables into terms based on a query result of a query over all variables. Generates one dictionary per query result to look up mappings
+def getVariableMap(querypattern, queryresult):
+    varmaps = []
+    for row in queryresult:
+            varmap = {}
+            print row
+            for var in querypattern.variables:
+                varmap[var] = row[var] #.n3().replace('?','')
+            print varmap
+            varmaps.append(varmap)
+    return varmaps
+
+def substituteVars(bgp,varmap):
+     bgpout = []
+     for t in bgp:
+        tuple = ()
+        for j in (0,1,2):
+            tuple[j] =(varmap(t[j]) if (type(t[j]) is rdflib.term.Variable and t[j] in varmap.keys) else t[j])
+        bgpout.append(tuple)
+     return bgpout
 
 def subCGP(cgp, cgpagainst):
-    return subBGP(cgp.triples,cgpagainst.triples) and subNGPs(cgp.minus,cgpagainst.minus) and subRPs(cgp.completion,cgpagainst.completion)
+    indeed = True
+    bgpresult = subBGP(cgp.triples,cgpagainst.triples)
+    varmap = None
+    if bool(bgpresult):
+        varmaps = getVariableMap(cgpagainst,bgpresult)
+        varmap = varmaps[0]
+    else:
+        indeed = False
+    if varmap != None:
+        cgpagainstm =substituteVars(cgpagainst.minus, varmap)
+        #cgpagainstc =substituteVars(cgpagainst.completion, varmap)
+    else:
+        cgpagainstm = cgpagainst.minus
+        #cgpagainstc =cgpagainst.completion
+
+    ngpresult = subNGPs(cgp.minus,cgpagainstm)
+    rpresult = subRPs(cgp.completion,cgpagainst.completion)
+
+    return indeed
+
 
 
 def matchRequest2tool(requestpt, toolpt):
@@ -315,8 +374,10 @@ def matchRequest2tool(requestpt, toolpt):
 
 def searchForTool(request):
     tq = loadQueries('tools/tool*.rq')
-    print '\n Search for corresponding tools \n'
+    print ''
+    print 'Search for corresponding tools \n'
     for i,tqs in enumerate(tq):
+        print ''
         print 'Tool '+str(i+1)+':'
         #sparql.algebra.pprintAlgebra(q)
         tool = parseQuery(tqs)
@@ -337,6 +398,7 @@ def main():
         print rqs
         request = parseQuery(rqs)
         searchForTool(request)
+
 
 
 
