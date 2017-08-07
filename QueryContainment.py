@@ -1,11 +1,25 @@
-#-------------------------------------------------------------------------------
-# Name:         Question based Analysis
-# Purpose:      This module allows querying and matching
-#               SPARQL constraint queries. These are queries consisting of a basic
-#               graph pattern with (potentially) FILTER NOT EXISTS statements
-#               that can be nested (one level). The purpose is desrcibing GIS tools
-#               and querying for them based on the question they answer.
-#-------------------------------------------------------------------------------
+
+"""
+Question based Analysis.
+
+This module allows matching SPARQL constraint queries, based on determining wether a given query is a subquery of another.
+The purpose is desrcibing GIS tools and querying for them based on the question they answer.
+
+SPARQL constraint queries consist of a basic
+graph pattern with (potentially many) FILTER NOT EXISTS statements
+that can also be nested (one level).
+
+SPARQL Constraint is equivalent to a constrained graph pattern (CGP), consisting of:
+- BGP = A Basic graph pattern
+- NS = A negation set , i.e., a set of n negated graph patterns  {not BGP1, not BGP2, ...., not BGPn}
+- NS = A rule set , i.e. a set of m rules {BGP1b -> BGP1h, BGP2b -> BGP2h, ...., BGPmb -> BGPmh}
+
+The code is written in Python 2.7 and depends on:
+
+* RDFLib (# pip install rdflib)
+
+"""
+
 
 
 __author__      = "Andrea Ballatore; Simon Scheider"
@@ -140,14 +154,14 @@ class Outpattern():
     def __str__(self):
          #print out
          prtt = (
-         '\n SPARQL Constraint Graph Pattern: \n'+
+         'SPARQL Constraint Graph Pattern: \n'+
          ' Goals: '+str(self.goals)+'\n'+
          ' Variables: '+str(self.variables)+'\n'+
          ' BGP: \n'+ str(self.triples) +' \n'+
          ' NGPs: ')
          for i,m in enumerate(self.minus):
                 prtt += "\n  NGP "+ str(i+1) +': ' +str(m)
-         prtt +="\n"+"RPs: "
+         prtt +="\n"+" RPs: "
          for i,m in enumerate(self.completion):
                 prtt += "\n  RP "+ str(i+1) +': ' +str(m[0]) +' -> '+str(m[1])
          return prtt
@@ -158,6 +172,9 @@ class Outpattern():
 
 """This method is the entry point for parsing. It takes a query string"""
 def parseQuery(query):
+    print ''
+    print 'Start parsing the query:'
+    print query
     #get the SPARQL algebra
     qu=sparql.prepareQuery(query)
     a = qu.algebra
@@ -443,7 +460,7 @@ def substituteVars(bgp,varmap):
 def searchForTool(request):
     tq = loadQueries('tools/tool*.rq')
     print ''
-    print 'Search for corresponding tools \n'
+    print 'Search for corresponding tools'
     for i,tqs in enumerate(tq):
         print ''
         print 'Tool '+str(i+1)+':'
@@ -453,7 +470,7 @@ def searchForTool(request):
             print ''
             print 'Request matches to'
             print tool
-            print tqs
+            print ''
             #print tool.query
 
 
@@ -462,8 +479,7 @@ def main():
     #g = rdflib.ConjunctiveGraph()
     rq = loadQueries('requests/request1.rq')
     for rqs in rq:
-        print 'Request: '
-        print rqs
+        print 'SPARQL Request: '
         request = parseQuery(rqs)
         searchForTool(request)
 
