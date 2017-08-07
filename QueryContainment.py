@@ -1,16 +1,10 @@
 #-------------------------------------------------------------------------------
-# Name:        Question based Analysis
+# Name:         Question based Analysis
 # Purpose:      This module allows querying and matching
 #               SPARQL constraint queries. These are queries consisting of a basic
 #               graph pattern with (potentially) FILTER NOT EXISTS statements
 #               that can be nested (one level). The purpose is desrcibing GIS tools
 #               and querying for them based on the question they answer.
-#
-# Author:
-#
-# Created:     04/08/2017
-# Copyright:   (c) simon 2017
-# Licence:     <your licence>
 #-------------------------------------------------------------------------------
 
 
@@ -20,6 +14,21 @@ __copyright__   = ""
 import rdflib
 import rdflib.plugins.sparql as sparql
 import glob
+
+
+
+"""Helper stuff"""
+def n_triples( g, n=None ):
+    """ Prints the number of triples in graph g """
+    if n is None:
+        print( '  Triples: '+str(len(g)) )
+    else:
+        print( '  Triples: +'+str(len(g)-n) )
+    return len(g)
+
+def printGraph(graph):
+    for s, p, o in graph:
+        print s, p,  o
 
 def file_to_str(fn):
     """
@@ -65,16 +74,19 @@ class Stack:
      def size(self):
          return len(self.items)
 
+
+
+
 """This class represents query patterns in a recursive way. That is, subpatterns are stored inside outer patterns.
 The method constraintsPatterns() needs to be called after adding all subpatterns and turns the pattern into an explicit SPARQL constraint representation with BGP, NGP and RP."""
 
 class Outpattern():
-    goals = []
-    variables = set()
-    triples=[]
-    rules = Stack()
-    minus=[]
-    completion=[]
+    goals = [] #These are the selected variables
+    variables = set() #These are all variables appearing in the query
+    triples=[] #This contains BGP triples (in the where clause) of the query
+    rules = Stack() #Only needed to collect negations and rules
+    minus=[] #This contains all NGP patterns (in FILTER NOT EXISTS clause) of the query
+    completion=[] #This contains all RP patterns (rules) (in nested FILTER NOT EXISTS clause) of the query
 
     def __init__(self, goals=[], triples=[], rules=Stack(), minus = [], completion = [], variables = []):
         self.goals=goals
@@ -101,7 +113,7 @@ class Outpattern():
             #print "rule: "+ str(o.triples) + '->'+ str(o.rules.items[0].triples)
 
 
-    #This generates the constaint patterns (arrays of negations (=minus) and rules (=completion) from the nested graph patterns and fishes out variables of the entire pattern
+    #This generates the constaint patterns (arrays of negations (=minus) and rules (=completion) from the nested graph patterns and fishes out variables of the entire pattern. Should be called after a query is parsed.
     def constraintPatterns(self):
         self.minus = []
         self.completion = []
@@ -144,6 +156,7 @@ class Outpattern():
 
 """Methods to parse a SPARQL query into SPARQL constraint patterns"""
 
+"""This method is the entry point for parsing. It takes a query string"""
 def parseQuery(query):
     #get the SPARQL algebra
     qu=sparql.prepareQuery(query)
@@ -259,32 +272,24 @@ def BGP2ASK(bgp):
     return q
     #bool(results)
 
-'''This method turns a basic graph pattern into RDF. Variables are turned into URIs.'''
+'''This method turns a basic graph pattern into RDF. Variables are turned into URIs to fix their meaning.'''
 def BGP2RDF(bgp):
     output = rdflib.Graph()
     for t in bgp:
         output.add((variable2term(t[0]), variable2term(t[1]),variable2term(t[2])))
     return output
 
-'''This turns variables into blank nodes'''
+'''This turns variables into URIs in order to keep their bindings fixed'''
 def variable2term(term):
     if type(term) is rdflib.term.Variable:
         return rdflib.term.URIRef(term)
     else:
         return term
 
-def n_triples( g, n=None ):
-    """ Prints the number of triples in graph g """
-    if n is None:
-        print( '  Triples: '+str(len(g)) )
-    else:
-        print( '  Triples: +'+str(len(g)-n) )
-    return len(g)
 
-def printGraph(graph):
-    for s, p, o in graph:
-        print s, p,  o
+"""Main methods for query containment"""
 
+'''This determines whether a basic graph pattern (BGP) is contained in another'''
 def subBGP(bgp, bgpagainst):
     #mapping from bgpagainst into bgp
     rdf = BGP2RDF(bgp)
@@ -292,86 +297,149 @@ def subBGP(bgp, bgpagainst):
     result = rdf.query(ask)
     return result
 
+'''This determines whether a negated graph pattern (NGP) is contained in another'''
 def subNGP(ngp, ngpagainst):
     return subBGP(ngpagainst,ngp)
 
+'''This determines whether a negation set (NS) is contained in another'''
 def subNGPs(ngps, ngpsagainst):
+    resultlist = []
     for pa in ngpsagainst:
         res = False
         for p in ngps:
-            if subNGP(p, pa):
+            result = subNGP(p, pa)
+            if bool(result):
+                resultlist.append(result)
                 res = True
                 break
-        if res == False:
+        if not res:
             return False
-    return True
+    return resultlist
 
+'''This determines whether a rule pattern (RP) is contained in another'''
 def subRP(rp, rpagainst):
     body2 = rpagainst[0]
     head2 = rpagainst[1]
     body1 = rp[0]
     head1 = rp[1]
-    return subBGP(body2, body1) and subBGP(head1, head2)
+    return [subBGP(body2, body1),subBGP(head1, head2)]
 
+'''This determines whether a rule set (RS) is contained in another'''
 def subRPs(rps, rpsagainst):
+    resultlist = []
     for pa in rpsagainst:
         res = False
         for p in rps:
-            if subRP(p, pa):
+            result = subRP(p, pa)
+            if bool(result[0] and result[1]):
+                resultlist.append(result)
                 res = True
                 break
-        if res == False:
+        if not res:
             return False
+    return resultlist
+
+'''This determines whether a Constrained Graph Pattern (CGP) is contained in another'''
+def subCGP(cgp, cgpagainst):
+    varmaps = []
+    #Check query containment for BGPs
+    bgpresult = subBGP(cgp.triples,cgpagainst.triples)
+    if bool(bgpresult):
+        print 'BGP Match!'
+        varmaps = getVariableMap(cgpagainst,bgpresult)
+    else:
+        print 'BGP does not Match!'
+        return False
+
+    #Check query containment for NGPs
+    #First substitute variables with terms obtained from the BGP query result to link pattern queries.
+    cgpagainstm = cgpagainst.minus
+    varmapk = []
+    if varmaps != []:
+        for varmap in varmaps:
+                cgpagainstm = []
+                for triples in cgpagainst.minus:
+                    cgpagainstm.append(substituteVars(triples, varmap))
+                ngpresults = subNGPs(cgp.minus,cgpagainstm)
+                if ngpresults != False:
+                    print 'NGPs Match! '
+                    for ngpresult in ngpresults:
+                        varmap.update(invertmap(getVariableMap(cgp,ngpresult)[0]))
+                    varmapk.append(varmap)
+                else:
+                    print 'NGPs do not Match!'
+                    return False
+    else:
+        ngpresults = subNGPs(cgp.minus,cgpagainstm)
+    #If check is successful, then get potentially new variables and add them to the variable map
+        if ngpresults != False:
+            print 'NGPs Match!'
+            for ngpresult in ngpresults:
+                varmapk.append(invertmap(getVariableMap(cgp,ngpresult)[0]))
+        else:
+            print 'NGPs do not Match!'
+            return False
+
+    if varmapk == []: varmapk = varmaps
+
+    #Check query containment for RPs
+    #First substitute variables with terms obtained from the BGP and NGP query results to link pattern queries.
+    cgpagainstc =cgpagainst.completion
+    if varmapk != []:
+        for varmap in varmapk:
+                cgpagainstc = []
+                for rule in cgpagainst.completion:
+                    cgpagainstc.append([substituteVars(rule[0], varmap),substituteVars(rule[1], varmap)])
+                rpresults = subRPs(cgp.completion,cgpagainstc)
+                if rpresults != False: break
+    else:
+        rpresults = subRPs(cgp.completion,cgpagainstc)
+
+    if rpresults == False:
+        print 'RPs do not Match!'
+        return False
+    else:
+        print 'RPs Match!'
+
     return True
 
-#This method generates a mapping from variables into terms based on a query result of a query over all variables. Generates one dictionary per query result to look up mappings
+def invertmap(map):
+    return dict((v, k) for k, v in map.iteritems())
+
+def matchRequest2tool(requestpt, toolpt):
+    print ''
+    print 'Start matching procedure'
+    return subCGP(toolpt,requestpt)
+
+
+#This method generates a mapping from variables into terms based on result variable bindings. Generates one dictionary per query result, in order to look up bindings
 def getVariableMap(querypattern, queryresult):
     varmaps = []
+    print 'Get variable bindings'
+    print "Number of bindings:" +str(len(queryresult))
     for row in queryresult:
             varmap = {}
-            print row
+            #print querypattern.variables
+            #print row
             for var in querypattern.variables:
-                varmap[var] = row[var] #.n3().replace('?','')
+                #store the variables together with their bindings in a dictionary
+                if  hasattr(row,var):
+                    varmap[var] = row[var]
             print varmap
             varmaps.append(varmap)
     return varmaps
 
+#This method takes a bgp and substitutes terms for variables given a variable binding
 def substituteVars(bgp,varmap):
      bgpout = []
      for t in bgp:
-        tuple = ()
+        tu = []
         for j in (0,1,2):
-            tuple[j] =(varmap(t[j]) if (type(t[j]) is rdflib.term.Variable and t[j] in varmap.keys) else t[j])
-        bgpout.append(tuple)
+            tu.append((varmap[t[j]] if (type(t[j]) is rdflib.term.Variable and t[j] in varmap.keys()) else t[j]))
+        bgpout.append(tuple(tu))
      return bgpout
 
-def subCGP(cgp, cgpagainst):
-    indeed = True
-    bgpresult = subBGP(cgp.triples,cgpagainst.triples)
-    varmap = None
-    if bool(bgpresult):
-        varmaps = getVariableMap(cgpagainst,bgpresult)
-        varmap = varmaps[0]
-    else:
-        indeed = False
-    if varmap != None:
-        cgpagainstm =substituteVars(cgpagainst.minus, varmap)
-        #cgpagainstc =substituteVars(cgpagainst.completion, varmap)
-    else:
-        cgpagainstm = cgpagainst.minus
-        #cgpagainstc =cgpagainst.completion
-
-    ngpresult = subNGPs(cgp.minus,cgpagainstm)
-    rpresult = subRPs(cgp.completion,cgpagainst.completion)
-
-    return indeed
-
-
-
-def matchRequest2tool(requestpt, toolpt):
-    return subCGP(toolpt,requestpt)
-
-
+'''This method takes a parsed request query and searches for matching tools in the tools folder'''
 def searchForTool(request):
     tq = loadQueries('tools/tool*.rq')
     print ''
@@ -392,7 +460,7 @@ def searchForTool(request):
 
 def main():
     #g = rdflib.ConjunctiveGraph()
-    rq = loadQueries('requests/request*.rq')
+    rq = loadQueries('requests/request1.rq')
     for rqs in rq:
         print 'Request: '
         print rqs
