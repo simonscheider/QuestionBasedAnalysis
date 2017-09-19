@@ -1,0 +1,25 @@
+PREFIX ada: <http://geographicknowledge.de/vocab/AnalysisData.rdf#>
+PREFIX gis: <http://geographicknowledge.de/vocab/GISConcepts.rdf#>
+PREFIX wf: <http://geographicknowledge.de/vocab/Workflow.rdf#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX m: <http://www.w3.org/TR/MathML/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema>
+
+CONSTRUCT { 
+?sn wf:fstInput ?geometry_in. ?sn wf:output ?snappedgeom_out.
+?sn gis:param ?snapdist_in . ?sn a gis:Snap}
+WHERE {
+ ?snappedgeom_out a geo:Geometry. 
+ ?geometry_in a geo:Geometry. 
+ FILTER NOT EXISTS {       
+    ?d a geof:distance. 
+    ?d   wf:fstInput ?geometry_in.
+    ?d   wf:sndInput ?snappedgeom_out.
+    ?d  gis:param xsd:meter.
+    ?d  wf:output ?dist.
+    ?dist m:leq ?snapdist_in.
+    FILTER NOT EXISTS { ?geometry_in geo:sfTouches ?snappedgeom_out }
+ }
+}

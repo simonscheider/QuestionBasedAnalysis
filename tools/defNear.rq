@@ -1,0 +1,25 @@
+PREFIX ada: <http://geographicknowledge.de/vocab/AnalysisData.rdf#>
+PREFIX gis: <http://geographicknowledge.de/vocab/GISConcepts.rdf#>
+PREFIX wf: <http://geographicknowledge.de/vocab/Workflow.rdf#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX m: <http://www.w3.org/TR/MathML/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+
+#?a is nearest element to ?b within layer ?l
+CONSTRUCT {?n wf:output ?a. ?n wf:fstInput ?b . ?n wf:sndInput ?l . ?n a gis:Nearest.}
+WHERE {
+?a ada:hasSupport ?ar . ?l ada:hasElement ?a . ?l a gis:Layer.
+?b ada:hasSupport ?br .
+?ar wf:fstInput ?d. ?br wf:sndInput ?d. ?d a geof:distance . # Distance of pair
+?d wf:output ?dv .
+FILTER NOT EXISTS {
+	?l ada:hasElement ?c .
+	?c ada:hasSupport ?cr .
+	?cr wf:fstInput ?dc. ?br wf:sndInput ?dc. ?dc a geof:distance . # Distance of other pair
+	?dc wf:output ?dcv .
+		FILTER NOT EXISTS {
+			 ?dv m:leq ?dcv .
+			 }
+	}
+}

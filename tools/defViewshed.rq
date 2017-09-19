@@ -1,0 +1,29 @@
+PREFIX ada: <http://geographicknowledge.de/vocab/AnalysisData.rdf#>
+PREFIX gis: <http://geographicknowledge.de/vocab/GISConcepts.rdf#>
+PREFIX wf: <http://geographicknowledge.de/vocab/Workflow.rdf#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX m: <http://www.w3.org/TR/MathML/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema>
+
+CONSTRUCT { 
+?vs wf:fstInput ?raster_in. ?vs wf:sndInput ?viewpoint_in . 
+?vs wf:output ?visraster_out . ?vs a gis:Viewshed .}
+WHERE { 
+ ?viewpoint_in a gis:Point.
+ ?raster_in a gis:Raster.
+ ?visraster_out a gis:Raster.
+ FILTER NOT EXISTS {
+  ?cell ada:elementOf ?visraster_out.
+  ?cell  ada:hasMeasure ?m.  
+    FILTER NOT EXISTS {
+       ?cell  ada:hasSupport ?cellgeom.
+       ?vr a gis:Visible.
+       ?vr  gis:from ?viewpoint_in.
+       ?vr  gis:height  ?raster_in.
+       ?vr  gis:visible ?cellgeom. 
+       ?vr wf:output ?m .
+	}
+ }
+}

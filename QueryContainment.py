@@ -2,7 +2,7 @@
 """
 Question based Analysis.
 
-This module allows matching SPARQL constraint queries, based on determining wether a given query is a subquery of another.
+This module allows matching of SPARQL constraint queries, based on determining wether a given query is a subquery of another.
 The purpose is desrcibing GIS tools and querying for them based on the question they answer.
 
 SPARQL constraint queries consist of a basic
@@ -28,7 +28,26 @@ __copyright__   = ""
 import rdflib
 import rdflib.plugins.sparql as sparql
 import glob
+import RDFClosure
+from rdflib.namespace import RDFS, RDF
 
+"""Reasoning stuff"""
+def run_inferences( g ):
+    #print('run_inferences')
+    # expand deductive closure
+    RDFClosure.DeductiveClosure(RDFClosure.RDFS_Semantics).expand(g)
+    #RDFClosure.DeductiveClosure(RDFClosure.OWLRL_Semantics).expand(g)
+    n_triples(g)
+    return g
+
+def load_ontologies( g ):
+    #print("load_ontologies")
+    ontos = ["ontologies/GISConcepts.rdf","ontologies/Workflow.rdf","ontologies/AnalysisData.rdf"]#,"ontologies/Workflow.rdf","ontologies/AnalysisData.rdf"]
+    for fn in ontos:
+        #print("  Load RDF file: "+fn)
+        g.parse( fn )
+    #n_triples(g)
+    return g
 
 
 """Helper stuff"""
@@ -53,20 +72,16 @@ def file_to_str(fn):
         content=f.read()
     return content
 
-def loadData(g, file ):
-    wf = rdflib.Graph()
-    gd = wf.parse(file, format='n3') +g
-    print "data loaded"
-    return gd
-
 def loadQueries(filepattern):
     queries = []
     querystr = glob.glob(filepattern)
+    print "\n Queries loaded:"
+    print querystr
     #file = 'questions/maupquery.rq'
     for qi in querystr:
         #print file_to_str(qi)
         q = file_to_str(qi)#file_to_str('rdf_prefixes.txt') +'\n'+
-        queries.append(q)
+        queries.append([qi,q])
     return queries
 
 class Stack:
@@ -97,13 +112,15 @@ The method constraintsPatterns() needs to be called after adding all subpatterns
 class Outpattern():
     goals = [] #These are the selected variables
     variables = set() #These are all variables appearing in the query
+    construct = [] #The graph pattern in the construct clause
     triples=[] #This contains BGP triples (in the where clause) of the query
     rules = Stack() #Only needed to collect negations and rules
     minus=[] #This contains all NGP patterns (in FILTER NOT EXISTS clause) of the query
     completion=[] #This contains all RP patterns (rules) (in nested FILTER NOT EXISTS clause) of the query
 
-    def __init__(self, goals=[], triples=[], rules=Stack(), minus = [], completion = [], variables = []):
+    def __init__(self, goals=[], triples=[], rules=Stack(), minus = [], completion = [], variables = [], construct = []):
         self.goals=goals
+        self.construct=construct
         self.triples=triples
         self.rules=rules
         self.minus = minus
@@ -120,7 +137,10 @@ class Outpattern():
             #print "write rule body: "+ str(array)
         elif state == 'completion':
             r = Outpattern(triples=array, goals=[], rules=Stack(), minus = [], completion = [], variables = set())
-            o = self.rules.pop()
+            if not self.rules.isEmpty():
+                o = self.rules.pop()
+            else:
+                o = Outpattern(triples=[], goals=[], rules=Stack(), minus = [], completion = [], variables = set())
             o.rules.push(r)
             self.rules.push(o)
             #print "write rule head: "+ str(array)
@@ -134,6 +154,8 @@ class Outpattern():
         self.variables = set()
 
         self.setVariables(self.triples)
+        if self.construct!= None:
+            self.setVariables(self.construct)
         for p in self.rules.items:
             if p.rules.isEmpty():
                 self.minus.append(p.triples)
@@ -156,7 +178,8 @@ class Outpattern():
          prtt = (
          'SPARQL Constraint Graph Pattern: \n'+
          ' Goals: '+str(self.goals)+'\n'+
-         ' Variables: '+str(self.variables)+'\n'+
+         ' Variables in query: '+str(self.variables)+'\n'+
+         ' Construct clause: '+str(self.construct)+'\n'+
          ' BGP: \n'+ str(self.triples) +' \n'+
          ' NGPs: ')
          for i,m in enumerate(self.minus):
@@ -170,23 +193,28 @@ class Outpattern():
 
 """Methods to parse a SPARQL query into SPARQL constraint patterns"""
 
-"""This method is the entry point for parsing. It takes a query string"""
+"""This method is the entry point for parsing. It takes a query string, turns it into SPARQL algebra and then generates a SPARQL constraint pattern"""
 def parseQuery(query):
     print ''
     print 'Start parsing the query:'
-    print query
+    #print query
     #get the SPARQL algebra
     qu=sparql.prepareQuery(query)
+    #print qu.prologue
     a = qu.algebra
-    #print a
     goals=[]
     if 'PV' in a.keys():
         goals = a['PV']
-        #print "goals: " +str(goals)
+        print "goals: " +str(goals)
     #initialize output object
-    output = Outpattern(goals=goals,  triples=[], rules=Stack(), minus = [], completion = [], variables = set())
+    #print a.template
+    #Prepare output pattern object
+    output = Outpattern(goals=goals,  triples=[], rules=Stack(), minus = [], completion = [], variables = set(), construct=(a.template if a.template !=None else []))
+    #start filling the pattern recursively
     transformP(a.name, a, output, 'triples')
+    #prepare pattern summaries
     output.constraintPatterns()
+    #print output
     return output
 
 def transformP(pname, p, output, state):
@@ -198,6 +226,9 @@ def transformP(pname, p, output, state):
     elif pname == 'TriplesBlock':
         transformTriplesBlock(p, output, state)
     elif pname == 'SelectQuery':
+        if p.p:
+            transformP(p.p.name,p.p, output, state)
+    elif pname == 'ConstructQuery':
         if p.p:
             transformP(p.p.name,p.p, output, state)
     elif pname == 'Project':
@@ -289,11 +320,13 @@ def BGP2ASK(bgp):
     return q
     #bool(results)
 
-'''This method turns a basic graph pattern into RDF. Variables are turned into URIs to fix their meaning.'''
+'''This method turns a basic graph pattern into RDF. Variables are turned into (fake) URIs to fix their meaning.'''
 def BGP2RDF(bgp):
     output = rdflib.Graph()
     for t in bgp:
         output.add((variable2term(t[0]), variable2term(t[1]),variable2term(t[2])))
+    output = load_ontologies(output)
+    output = run_inferences(output)
     return output
 
 '''This turns variables into URIs in order to keep their bindings fixed'''
@@ -309,6 +342,8 @@ def variable2term(term):
 '''This determines whether a basic graph pattern (BGP) is contained in another'''
 def subBGP(bgp, bgpagainst):
     #mapping from bgpagainst into bgp
+    if bgp ==[]: #The empty pattern is always a subpattern of any pattern
+        return True
     rdf = BGP2RDF(bgp)
     ask = BGP2ASK(bgpagainst)
     result = rdf.query(ask)
@@ -339,7 +374,12 @@ def subRP(rp, rpagainst):
     head2 = rpagainst[1]
     body1 = rp[0]
     head1 = rp[1]
-    return [subBGP(body2, body1),subBGP(head1, head2)]
+##    print 'subrule: '
+##    print str(body1) + ' -> '+str(head1)
+##    print 'superrule: '
+##    print str(body2) + ' -> '+str(head2)
+    res = [subBGP(body2, body1),subBGP(head1, head2)]
+    return res
 
 '''This determines whether a rule set (RS) is contained in another'''
 def subRPs(rps, rpsagainst):
@@ -359,8 +399,9 @@ def subRPs(rps, rpsagainst):
 '''This determines whether a Constrained Graph Pattern (CGP) is contained in another'''
 def subCGP(cgp, cgpagainst):
     varmaps = []
-    #Check query containment for BGPs
-    bgpresult = subBGP(cgp.triples,cgpagainst.triples)
+
+    #Check query containment for BGPs (plus construct clause if available)
+    bgpresult = subBGP(cgp.triples+cgp.construct,cgpagainst.triples+cgpagainst.construct)
     if bool(bgpresult):
         print 'BGP Match!'
         varmaps = getVariableMap(cgpagainst,bgpresult)
@@ -383,6 +424,7 @@ def subCGP(cgp, cgpagainst):
                     for ngpresult in ngpresults:
                         varmap.update(invertmap(getVariableMap(cgp,ngpresult)[0]))
                     varmapk.append(varmap)
+                    break
                 else:
                     print 'NGPs do not Match!'
                     return False
@@ -458,31 +500,45 @@ def substituteVars(bgp,varmap):
 
 '''This method takes a parsed request query and searches for matching tools in the tools folder'''
 def searchForTool(request):
-    tq = loadQueries('tools/tool*.rq')
+    tq = loadQueries('tools/def*.rq')
+    #tq = loadQueries('tools/defArealInterpolation.rq')
+    matches = []
     print ''
     print 'Search for corresponding tools'
-    for i,tqs in enumerate(tq):
+    for tqs in tq:
         print ''
-        print 'Tool '+str(i+1)+':'
+        print 'Tool '+str(tqs[0])+':'
         #sparql.algebra.pprintAlgebra(q)
-        tool = parseQuery(tqs)
+        tool = parseQuery(tqs[1])
         if matchRequest2tool(request, tool):
             print ''
-            print 'Request matches to'
-            print tool
+            print 'Request matches!'
+            #print tool
+            matches.append(tqs)
             print ''
             #print tool.query
-
+    return matches
 
 
 def main():
     #g = rdflib.ConjunctiveGraph()
-    rq = loadQueries('requests/request1.rq')
+    rq = loadQueries('requests/r*.rq')
+    results= {}
     for rqs in rq:
-        print 'SPARQL Request: '
-        request = parseQuery(rqs)
-        searchForTool(request)
+        print 'SPARQL Request: '+rqs[0]
+        request = parseQuery(rqs[1])
+        matches = searchForTool(request)
+        results[rqs[0]]=[rqs[1],matches]
 
+    print '############################################################'
+    print "Results: "
+    for (k,v) in results.iteritems():
+        print "\n Request : "+k
+        #print v[0]
+        print "\n matches to "+str(len(v[1]))+" tools: \n"
+        for t in v[1]:
+            print 'Tool '+(t[0]) +'\n'
+            #print t[1]
 
 
 

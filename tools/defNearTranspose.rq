@@ -1,0 +1,21 @@
+PREFIX ada: <http://geographicknowledge.de/vocab/AnalysisData.rdf#>
+PREFIX gis: <http://geographicknowledge.de/vocab/GISConcepts.rdf#>
+PREFIX wf: <http://geographicknowledge.de/vocab/Workflow.rdf#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX m: <http://www.w3.org/TR/MathML/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+
+#Meaning that element ?et gets attribute ?a from the nearest element in layer ?l
+CONSTRUCT {?nt wf:fstInput ?l. ?nt wf:sndInput ?et . ?nt wf:output ?a . ?nt a gis:NearTranspose.}
+WHERE {
+?l a gis:Layer.
+?et ada:hasMeasure ?a .
+FILTER NOT EXISTS {
+	?l ada:hasElement ?e.   
+	   ?e ada:hasMeasure ?att.   
+	   #?e is the nearest thing to ?et in layer ?l
+	   ?n wf:output ?e. ?n wf:fstInput ?et . ?n wf:sndInput ?l . ?n a gis:Nearest.
+	   FILTER NOT EXISTS {?att owl:sameAs ?a}
+	}
+}

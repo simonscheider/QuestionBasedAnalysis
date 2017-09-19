@@ -1,0 +1,30 @@
+PREFIX ada: <http://geographicknowledge.de/vocab/AnalysisData.rdf#>
+PREFIX gis: <http://geographicknowledge.de/vocab/GISConcepts.rdf#>
+PREFIX wf: <http://geographicknowledge.de/vocab/Workflow.rdf#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX m: <http://www.w3.org/TR/MathML/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema>
+
+
+CONSTRUCT {
+?cf wf:input ?layer_in. ?cf wf:output ?feature_out. 
+?cf a gis:CentralFeature.}
+WHERE {
+ ?feature_out ada:elementOf ?layer_in.
+ ?dist a gis:AccumulatedDistance.
+ ?dist   wf:fstInput ?feature_out.
+ ?dist   wf:sndInput ?layer_in.
+ ?dist  wf:output ?distvalue.
+ FILTER NOT EXISTS { 
+  ?feature2 ada:elementOf ?layer_in.
+  ?dist2 a gis:AccumulatedDistance.
+  ?dist2   wf:fstInput ?feature2.
+  ?dist2   wf:sndInput ?layer_in.
+  ?dist2   wf:output ?distvalue2.
+  FILTER NOT EXISTS {
+    ?distvalue2 m:leq ?distvalue.
+  }
+ }
+}

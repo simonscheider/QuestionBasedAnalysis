@@ -1,0 +1,38 @@
+PREFIX ada: <http://geographicknowledge.de/vocab/AnalysisData.rdf#>
+PREFIX gis: <http://geographicknowledge.de/vocab/GISConcepts.rdf#>
+PREFIX wf: <http://geographicknowledge.de/vocab/Workflow.rdf#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX m: <http://www.w3.org/TR/MathML/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema>
+
+CONSTRUCT {
+?lma wf:fstInput ?raster_in. ?lma wf:sndInput ?raster2_in .
+?lma wf:output ?raster_out. ?lma gis:param ?algebraicfunction_in. 
+?lma a gis:LocalMapAlgebra .
+}
+WHERE {
+ ?raster_in a gis:Raster. 
+ ?raster2_in a gis:Raster.
+ ?algebraicfunction_in a gis:AlgebraicFunction.
+ ?raster_out a gis:Raster.
+ FILTER NOT EXISTS {
+  ?cell ada:elementOf ?raster_in.
+  ?cell      ada:hasMeasure ?attribute.
+  ?cell      ada:hasSupport ?geometry. 
+  ?cell2 ada:elementOf ?raster2_in.
+  ?cell2      ada:hasMeasure ?attribute2.
+  ?cell2      ada:hasSupport ?geometry2.
+  ?ocell ada:elementOf ?raster_out.
+  ?ocell      ada:hasMeasure ?oattribute.
+  ?ocell      ada:hasSupport ?ogeometry.
+  ?geometry geo:sfEquals ?geometry2. 
+  ?geometry geo:sfEquals ?ogeometry.
+  FILTER NOT EXISTS {
+   ?algebraicfunction_in wf:fstInput ?attribute.
+   ?algebraicfunction_in    wf:sndInput ?attribute2.
+   ?algebraicfunction_in    wf:output ?oattribute.
+  }
+ }
+}

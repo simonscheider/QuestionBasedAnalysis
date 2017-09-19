@@ -1,5 +1,0 @@
-PREFIX ex: <http://www.example.de#>
-
-SELECT ?a ?b WHERE{
-?a ex:rel ?b
-}

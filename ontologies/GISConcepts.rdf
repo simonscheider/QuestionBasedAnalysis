@@ -78,6 +78,16 @@
     
 
 
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#from -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#from">
+        <rdfs:comment xml:lang="en">The &quot;from&quot; location of the visible from relation (a boolean operation)</rdfs:comment>
+        <rdfs:domain rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Visible"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#input"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#hasAttribute -->
 
     <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#hasAttribute">
@@ -105,6 +115,17 @@
     
 
 
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#height -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#height">
+        <rdfs:comment xml:lang="en">The hight information (layer) used to determine visibility in a visibleFrom relation</rdfs:comment>
+        <rdfs:range rdf:resource="&AnalysisData;DataSet"/>
+        <rdfs:domain rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Visible"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#inputdata"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#in -->
 
     <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#in">
@@ -118,6 +139,7 @@
 
     <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#inputdata">
         <rdfs:comment>Whenever the input is data, and not a single value or a function</rdfs:comment>
+        <rdfs:range rdf:resource="&AnalysisData;DataSet"/>
         <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#input"/>
     </owl:ObjectProperty>
     
@@ -156,6 +178,26 @@
         <rdfs:comment xml:lang="en">A property linking a merged region to the layer of which it was generated</rdfs:comment>
         <rdfs:range rdf:resource="&AnalysisData;DataSet"/>
         <rdfs:domain rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Region"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#of"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#ofElement -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#ofElement">
+        <rdfs:comment xml:lang="en">provenance relation to a data item (element)</rdfs:comment>
+        <rdfs:range rdf:resource="&AnalysisData;Data"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#of"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#ofLayer -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#ofLayer">
+        <rdfs:comment xml:lang="en">provenance relation of a layer</rdfs:comment>
+        <rdfs:range rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Layer"/>
         <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#of"/>
     </owl:ObjectProperty>
     
@@ -219,10 +261,22 @@
     
 
 
-    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation -->
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialTopRelation -->
 
-    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation">
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialTopRelation">
         <rdfs:comment>a superproperty for binary spatial relations</rdfs:comment>
+        <rdfs:domain rdf:resource="&AnalysisData;Spatial"/>
+        <rdfs:range rdf:resource="&AnalysisData;Spatial"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#visible -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#visible">
+        <rdfs:comment xml:lang="en">the location that is visible (in the 3-ary visible from relation). This is input to the (boolean) visible from operation.</rdfs:comment>
+        <rdfs:domain rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Visible"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#input"/>
     </owl:ObjectProperty>
     
 
@@ -238,7 +292,7 @@
     <!-- http://www.opengis.net/ont/geosparql#ehContains -->
 
     <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#ehContains">
-        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialTopRelation"/>
     </rdf:Description>
     
 
@@ -246,7 +300,7 @@
     <!-- http://www.opengis.net/ont/geosparql#ehCoveredBy -->
 
     <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#ehCoveredBy">
-        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialTopRelation"/>
     </rdf:Description>
     
 
@@ -254,7 +308,7 @@
     <!-- http://www.opengis.net/ont/geosparql#ehCovers -->
 
     <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#ehCovers">
-        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialTopRelation"/>
     </rdf:Description>
     
 
@@ -262,7 +316,7 @@
     <!-- http://www.opengis.net/ont/geosparql#ehDisjoint -->
 
     <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#ehDisjoint">
-        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialTopRelation"/>
     </rdf:Description>
     
 
@@ -270,7 +324,7 @@
     <!-- http://www.opengis.net/ont/geosparql#ehEquals -->
 
     <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#ehEquals">
-        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialTopRelation"/>
     </rdf:Description>
     
 
@@ -278,7 +332,7 @@
     <!-- http://www.opengis.net/ont/geosparql#ehInside -->
 
     <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#ehInside">
-        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialTopRelation"/>
     </rdf:Description>
     
 
@@ -286,7 +340,7 @@
     <!-- http://www.opengis.net/ont/geosparql#ehMeet -->
 
     <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#ehMeet">
-        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialTopRelation"/>
     </rdf:Description>
     
 
@@ -294,7 +348,7 @@
     <!-- http://www.opengis.net/ont/geosparql#ehOverlap -->
 
     <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#ehOverlap">
-        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialTopRelation"/>
     </rdf:Description>
     
 
@@ -302,7 +356,7 @@
     <!-- http://www.opengis.net/ont/geosparql#rcc8dc -->
 
     <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#rcc8dc">
-        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialTopRelation"/>
     </rdf:Description>
     
 
@@ -310,7 +364,7 @@
     <!-- http://www.opengis.net/ont/geosparql#rcc8ec -->
 
     <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#rcc8ec">
-        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialTopRelation"/>
     </rdf:Description>
     
 
@@ -318,7 +372,7 @@
     <!-- http://www.opengis.net/ont/geosparql#rcc8eq -->
 
     <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#rcc8eq">
-        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialTopRelation"/>
     </rdf:Description>
     
 
@@ -326,7 +380,7 @@
     <!-- http://www.opengis.net/ont/geosparql#rcc8ntpp -->
 
     <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#rcc8ntpp">
-        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialTopRelation"/>
     </rdf:Description>
     
 
@@ -334,7 +388,7 @@
     <!-- http://www.opengis.net/ont/geosparql#rcc8ntppi -->
 
     <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#rcc8ntppi">
-        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialTopRelation"/>
     </rdf:Description>
     
 
@@ -342,7 +396,7 @@
     <!-- http://www.opengis.net/ont/geosparql#rcc8po -->
 
     <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#rcc8po">
-        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialTopRelation"/>
     </rdf:Description>
     
 
@@ -350,7 +404,7 @@
     <!-- http://www.opengis.net/ont/geosparql#rcc8tpp -->
 
     <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#rcc8tpp">
-        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialTopRelation"/>
     </rdf:Description>
     
 
@@ -358,7 +412,7 @@
     <!-- http://www.opengis.net/ont/geosparql#rcc8tppi -->
 
     <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#rcc8tppi">
-        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialTopRelation"/>
     </rdf:Description>
     
 
@@ -366,7 +420,7 @@
     <!-- http://www.opengis.net/ont/geosparql#sfContains -->
 
     <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#sfContains">
-        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialTopRelation"/>
     </rdf:Description>
     
 
@@ -374,7 +428,7 @@
     <!-- http://www.opengis.net/ont/geosparql#sfCrosses -->
 
     <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#sfCrosses">
-        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialTopRelation"/>
     </rdf:Description>
     
 
@@ -382,7 +436,7 @@
     <!-- http://www.opengis.net/ont/geosparql#sfDisjoint -->
 
     <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#sfDisjoint">
-        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialTopRelation"/>
     </rdf:Description>
     
 
@@ -390,7 +444,7 @@
     <!-- http://www.opengis.net/ont/geosparql#sfEquals -->
 
     <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#sfEquals">
-        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialTopRelation"/>
     </rdf:Description>
     
 
@@ -398,7 +452,7 @@
     <!-- http://www.opengis.net/ont/geosparql#sfIntersects -->
 
     <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#sfIntersects">
-        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialTopRelation"/>
     </rdf:Description>
     
 
@@ -406,7 +460,7 @@
     <!-- http://www.opengis.net/ont/geosparql#sfOverlaps -->
 
     <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#sfOverlaps">
-        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialTopRelation"/>
     </rdf:Description>
     
 
@@ -414,7 +468,7 @@
     <!-- http://www.opengis.net/ont/geosparql#sfTouches -->
 
     <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#sfTouches">
-        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialTopRelation"/>
     </rdf:Description>
     
 
@@ -422,7 +476,7 @@
     <!-- http://www.opengis.net/ont/geosparql#sfWithin -->
 
     <rdf:Description rdf:about="http://www.opengis.net/ont/geosparql#sfWithin">
-        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialRelation"/>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#spatialTopRelation"/>
     </rdf:Description>
     
 
@@ -500,6 +554,7 @@
 
     <owl:Class rdf:about="&AnalysisData;Spatial">
         <rdfs:subClassOf rdf:resource="&AnalysisData;Reference"/>
+        <rdfs:subClassOf rdf:resource="http://www.opengis.net/ont/sf#Geometry"/>
         <rdfs:comment xml:lang="en">The class of spatial referents defined in some spatial reference system</rdfs:comment>
     </owl:Class>
     
@@ -546,6 +601,41 @@
     
 
 
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#AccumulatedDistance -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#AccumulatedDistance">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#DistanceOperation"/>
+        <rdfs:comment xml:lang="en">This GIS operation computes the accumulated spatial distance from some spatial geometry to a set of geometries given in a layer. </rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#AlgebraicFunction -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#AlgebraicFunction">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Fun"/>
+        <rdfs:comment xml:lang="en">Can be any function used in algebra, e.g. +, -, ...</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#ArealInterpolation -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#ArealInterpolation">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Operation"/>
+        <rdfs:comment xml:lang="en">Arealinterpolation(a,b) = c,  interpolating region layer b from region layer a</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#BlockKriging -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#BlockKriging">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Kriging"/>
+    </owl:Class>
+    
+
+
     <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Buffer -->
 
     <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Buffer">
@@ -571,10 +661,36 @@
     
 
 
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#CentralFeature -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#CentralFeature">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Operation"/>
+        <rdfs:comment xml:lang="en">Finds the central feature b  in a given layer a,  gis:CentralFeature(a) = b</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#ChoroClass -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#ChoroClass">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Operation"/>
+    </owl:Class>
+    
+
+
     <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Clip -->
 
     <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Clip">
         <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#VectorTopology"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#ComplexRelation -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#ComplexRelation">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Operation"/>
+        <rdfs:comment xml:lang="en">The class of complex (n-ary) relations, captured in terms of a boolean operation. The output of these operations is a boolean, and if the operation is applied to inputs, per default we mean that these inputs stand in that relation.</rdfs:comment>
     </owl:Class>
     
 
@@ -641,6 +757,15 @@
     <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Distance">
         <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#RelQ"/>
         <rdfs:comment xml:lang="en">a quality that denotes the spatial distance to a set of objects</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#DistanceOperation -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#DistanceOperation">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Operation"/>
+        <rdfs:comment xml:lang="en">A GIS operation that outputs some distance from something to something else given as input</rdfs:comment>
     </owl:Class>
     
 
@@ -735,10 +860,15 @@
 
     <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#FieldQuality">
         <owl:equivalentClass>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#of"/>
-                <owl:someValuesFrom rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#SField"/>
-            </owl:Restriction>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&AnalysisData;Quality"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#of"/>
+                        <owl:someValuesFrom rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#SField"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
         </owl:equivalentClass>
         <rdfs:subClassOf rdf:resource="&AnalysisData;Reference"/>
     </owl:Class>
@@ -762,6 +892,15 @@
     
 
 
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Interpolate -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Interpolate">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Operation"/>
+        <rdfs:comment xml:lang="en">  Interpolate (a,b) = c The operation of interpolating the measure of data element b based on some  layer a. The result is c.</rdfs:comment>
+    </owl:Class>
+    
+
+
     <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Intersect -->
 
     <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Intersect">
@@ -774,6 +913,14 @@
 
     <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#JoinField">
         <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Operation"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Kriging -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Kriging">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Interpolate"/>
     </owl:Class>
     
 
@@ -852,6 +999,24 @@
 
     <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Mask">
         <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#RasterOp"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#NearTranspose -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#NearTranspose">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Interpolate"/>
+        <rdfs:comment xml:lang="en">Interpolation based on the nearest neighbor: NearTranspose(a,b) = c means that data element b gets the measure c of the nearest element in layer a.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Nearest -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Nearest">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Operation"/>
+        <rdfs:comment xml:lang="en">The operation &quot; gis:Nearest(b, c) = a&quot; expresses that a is nearest to b within layer c.</rdfs:comment>
     </owl:Class>
     
 
@@ -1009,6 +1174,14 @@
     
 
 
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#RasterResampling -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#RasterResampling">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#toRaster"/>
+    </owl:Class>
+    
+
+
     <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Reclassify -->
 
     <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Reclassify">
@@ -1087,6 +1260,15 @@
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:comment>A spatial field (a continuous function defined on space ranging over quality values)</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Snap -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Snap">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Operation"/>
+        <rdfs:comment xml:lang="en">Snap(a,b, c) = c means that geomety a is snapped to geometry b with the snapping distance c.</rdfs:comment>
     </owl:Class>
     
 
@@ -1187,10 +1369,46 @@
     
 
 
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Vector -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Vector">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&AnalysisData;SpatialDataSet"/>
+                    <owl:Class>
+                        <owl:complementOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Raster"/>
+                    </owl:Class>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&AnalysisData;DataSet"/>
+    </owl:Class>
+    
+
+
     <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#VectorTopology -->
 
     <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#VectorTopology">
         <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Operation"/>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Viewshed -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Viewshed">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Operation"/>
+        <rdfs:comment xml:lang="en">A viewshed is a raster c where each cell measure denotes whether the cell location is visible from a viewpoint b given a height raster a. Viewshed(a,b) =c</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#Visible -->
+
+    <owl:Class rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#Visible">
+        <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#ComplexRelation"/>
+        <rdfs:comment xml:lang="en">This is a relation (boolean operation) between (inputs:) a location (gis:visible), a viewpoint location (gis:from) with respect to a heightraster (gis:height) which determines visibility.</rdfs:comment>
     </owl:Class>
     
 
@@ -1257,41 +1475,6 @@
         <rdfs:subClassOf rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Fun"/>
         <rdfs:comment xml:lang="en">GIS Operations </rdfs:comment>
     </rdf:Description>
-    
-
-
-    <!-- 
-    ///////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Individuals
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////
-     -->
-
-    
-
-
-    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#de -->
-
-    <owl:NamedIndividual rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#de">
-        <AnalysisData:hasMeasure rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#line"/>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#ds -->
-
-    <owl:NamedIndividual rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#ds">
-        <AnalysisData:hasElement rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#de"/>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- http://geographicknowledge.de/vocab/GISConcepts.rdf#line -->
-
-    <owl:NamedIndividual rdf:about="http://geographicknowledge.de/vocab/GISConcepts.rdf#line">
-        <rdf:type rdf:resource="http://geographicknowledge.de/vocab/GISConcepts.rdf#Line"/>
-    </owl:NamedIndividual>
 </rdf:RDF>
 
 

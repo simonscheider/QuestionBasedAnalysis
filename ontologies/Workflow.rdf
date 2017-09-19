@@ -56,9 +56,19 @@
     
 
 
+    <!-- http://geographicknowledge.de/vocab/Workflow.rdf#fstInput -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/Workflow.rdf#fstInput">
+        <rdfs:comment xml:lang="en">numbered input (to distinguish arity of an operation)</rdfs:comment>
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#input"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://geographicknowledge.de/vocab/Workflow.rdf#input -->
 
     <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/Workflow.rdf#input">
+        <rdfs:comment xml:lang="en">A property linking an (applied) operation to its inputs</rdfs:comment>
         <rdfs:domain rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Operation"/>
     </owl:ObjectProperty>
     
@@ -67,7 +77,7 @@
     <!-- http://geographicknowledge.de/vocab/Workflow.rdf#of -->
 
     <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/Workflow.rdf#of">
-        <rdfs:comment xml:lang="en">An overloaded property for linking resources inside a workflow back with provenance resources</rdfs:comment>
+        <rdfs:comment xml:lang="en">An overloaded property for linking resources inside a workflow back with provenance resources. The entity e1 in  &quot;e1 of e2&quot;  is derived from e2.</rdfs:comment>
     </owl:ObjectProperty>
     
 
@@ -89,12 +99,28 @@
     
 
 
+    <!-- http://geographicknowledge.de/vocab/Workflow.rdf#sndInput -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/Workflow.rdf#sndInput">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#input"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://geographicknowledge.de/vocab/Workflow.rdf#source -->
 
     <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/Workflow.rdf#source">
         <rdfs:comment>A property that links to the sources (inputs) of a workflow</rdfs:comment>
         <rdfs:domain rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#Workflow"/>
         <rdfs:subPropertyOf rdf:resource="&owl;topObjectProperty"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://geographicknowledge.de/vocab/Workflow.rdf#trdInput -->
+
+    <owl:ObjectProperty rdf:about="http://geographicknowledge.de/vocab/Workflow.rdf#trdInput">
+        <rdfs:subPropertyOf rdf:resource="http://geographicknowledge.de/vocab/Workflow.rdf#input"/>
     </owl:ObjectProperty>
     
 

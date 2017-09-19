@@ -1,0 +1,23 @@
+
+PREFIX ada: <http://geographicknowledge.de/vocab/AnalysisData.rdf#>
+PREFIX gis: <http://geographicknowledge.de/vocab/GISConcepts.rdf#>
+PREFIX wf: <http://geographicknowledge.de/vocab/Workflow.rdf#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX m: <http://www.w3.org/TR/MathML/>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema>
+
+CONSTRUCT{?method wf:input ?layer. ?method wf:output ?raster_layer.}
+WHERE {
+   ?layer a ada:DataSet.
+   ?raster_layer a gis:Raster.
+   FILTER NOT EXISTS{
+     ?cell ada:elementOf ?raster_layer .
+     ?cell ada:hasMeasure ?cell_measure.   
+   	FILTER NOT EXISTS{
+    	?innermethod wf:input ?layer .  
+	 	?innermethod wf:output ?cell_measure .
+    }
+   }   
+}
