@@ -17,6 +17,7 @@ SPARQL Constraint is equivalent to a constrained graph pattern (CGP), consisting
 The code is written in Python 2.7 and depends on:
 
 * RDFLib (# pip install rdflib)
+* RDFClosure for reasoning
 
 """
 
@@ -214,7 +215,7 @@ def parseQuery(query):
     transformP(a.name, a, output, 'triples')
     #prepare pattern summaries
     output.constraintPatterns()
-    #print output
+    print output
     return output
 
 def transformP(pname, p, output, state):
@@ -508,7 +509,7 @@ def searchForTool(request):
     for tqs in tq:
         print ''
         print 'Tool '+str(tqs[0])+':'
-        #sparql.algebra.pprintAlgebra(q)
+        #sparql.algebra.pprintAlgebra(tqs[1])
         tool = parseQuery(tqs[1])
         if matchRequest2tool(request, tool):
             print ''
@@ -522,7 +523,7 @@ def searchForTool(request):
 
 def main():
     #g = rdflib.ConjunctiveGraph()
-    rq = loadQueries('requests/r*.rq')
+    rq = loadQueries('requests/r1.rq')
     results= {}
     for rqs in rq:
         print 'SPARQL Request: '+rqs[0]
